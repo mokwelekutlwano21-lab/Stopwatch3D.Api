@@ -76,6 +76,18 @@
 
         scene.add(face);
 
+        // Hour hand (HR)
+        const hourHandGeometry = new THREE.BoxGeometry(0.05, 0.45, 0.02);
+        const hourHandMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+        const hourHand = new THREE.Mesh(hourHandGeometry, hourHandMaterial);
+
+        // Move pivot to bottom
+        hourHand.position.y = 0.225;
+        hourHand.position.z = 0.13;
+
+        scene.add(hourHand);
+
+
 
         // 5️⃣ Light
         const light = new THREE.PointLight(0xffffff, 1);
