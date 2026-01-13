@@ -56,11 +56,15 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 4️⃣ Create 3D object (cube)
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshStandardMaterial({ color: 0x00ffcc });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
+        // Watch body (circle)
+        const watchGeometry = new THREE.CylinderGeometry(1, 1, 0.2, 64);
+        const watchMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        const watch = new THREE.Mesh(watchGeometry, watchMaterial);
+
+        // Rotate so it faces the camera
+        watch.rotation.x = Math.PI / 2;
+
+        scene.add(watch);
 
         // 5️⃣ Light
         const light = new THREE.PointLight(0xffffff, 1);
