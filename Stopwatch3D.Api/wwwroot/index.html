@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Stopwatch</title>
+
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            overflow: hidden;
+        }
+
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-family: Arial;
+        }
+
+        button {
+            margin: 4px;
+            padding: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="ui">
+        <input id="speed" placeholder="Speed (km/h)" />
+        <br />
+        <button onclick="start()">Start</button>
+        <button onclick="stop()">Stop</button>
+        <button onclick="reset()">Reset</button>
+        <p id="info">Time: 00:00:00 | Distance: 0 km</p>
+    </div>
+
+    <!-- Three.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+    <script>
+        // 1️⃣ Create scene
+        const scene = new THREE.Scene();
+
+        // 2️⃣ Create camera
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
+
+        // 3️⃣ Create renderer
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 4️⃣ Create 3D object (cube)
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ffcc });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        // 5️⃣ Light
+        const light = new THREE.PointLight(0xffffff, 1);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+
+        // 6️⃣ Camera position
+        camera.position.z = 3;
+
+        // 7️⃣ Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // 8️⃣ API functions
+        async function start() {
+            await fetch('/api/stopwatch/start', { method: 'POST' });
+        }
+
+        async function stop() {
+            await fetch('/api/stopwatch/stop', { method: 'POST' });
+        }
+
+        async function reset() {
+            await fetch('/api/stopwatch/reset', { method: 'POST' });
+        }
+
+        async function update() {
+            const speed = document.getElementById('speed').value || 0;
+            const response = await fetch(`/api/stopwatch/time?speed=${speed}`);
+            const data = await response.json();
+
+            document.getElementById('info').innerText =
+                `Time: ${data.time} | Distance: ${data.distance} km`;
+        }
+
+        setInterval(update, 1000);
+    </script>
+
+</body>
+</html>
