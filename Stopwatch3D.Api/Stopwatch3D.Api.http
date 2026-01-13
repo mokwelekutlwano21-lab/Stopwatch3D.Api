@@ -1,0 +1,6 @@
+@Stopwatch3D.Api_HostAddress = http://localhost:5049
+
+GET {{Stopwatch3D.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
