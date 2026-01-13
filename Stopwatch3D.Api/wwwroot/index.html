@@ -106,18 +106,6 @@
         animate();
 
         // 8️⃣ API functions
-        async function start() {
-            await fetch('/api/stopwatch/start', { method: 'POST' });
-        }
-
-        async function stop() {
-            await fetch('/api/stopwatch/stop', { method: 'POST' });
-        }
-
-        async function reset() {
-            await fetch('/api/stopwatch/reset', { method: 'POST' });
-        }
-
         async function update() {
             const speed = document.getElementById('speed').value || 0;
             const response = await fetch(`/api/stopwatch/time?speed=${speed}`);
@@ -125,9 +113,18 @@
 
             document.getElementById('info').innerText =
                 `Time: ${data.time} | Distance: ${data.distance} km`;
+
+            const parts = data.time.split(":");
+            const hours = parseInt(parts[0]) % 12;
+            const minutes = parseInt(parts[1]);
+
+            // Hour hand rotation (12 hours = full circle)
+            const hourRotation =
+                -((hours + minutes / 60) * (Math.PI / 6));
+
+            hourHand.rotation.z = hourRotation;
         }
 
-        setInterval(update, 1000);
     </script>
 
 </body>
